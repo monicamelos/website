@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: monicawordpress
+      WORDPRESS_DB_PASSWORD: monicawordpress
+      WORDPRESS_DB_NAME: monicawordpress
+    depends_on:
+      - db
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - wordpress_network
+    restart: unless-stopped
+
+  db:
+    image: mariadb:10.5
+    container_name: wordpress_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: monicawordpress
+      MYSQL_USER: monicawordpress
+      MYSQL_PASSWORD: ${MYSQL_DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - wordpress_network
+    restart: unless-stopped
+
+
+volumes:
+  wordpress_data:
+  db_data:
+
+networks:
+  wordpress_network:
+    driver: bridge
