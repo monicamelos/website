@@ -6,9 +6,9 @@ services:
     container_name: wordpress
     environment:
       WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_USER: monicawordpress
-      WORDPRESS_DB_PASSWORD: monicawordpress
-      WORDPRESS_DB_NAME: monicawordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: ${MYSQL_DB_PASSWORD}
+      WORDPRESS_DB_NAME: wordpress
     depends_on:
       - db
     volumes:
@@ -16,20 +16,23 @@ services:
     networks:
       - wordpress_network
     restart: unless-stopped
+    ports:
+      - "80:80"
 
   db:
     image: mariadb:10.5
     container_name: wordpress_db
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: monicawordpress
-      MYSQL_USER: monicawordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
       MYSQL_PASSWORD: ${MYSQL_DB_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - wordpress_network
     restart: unless-stopped
+
 
 
 volumes:
